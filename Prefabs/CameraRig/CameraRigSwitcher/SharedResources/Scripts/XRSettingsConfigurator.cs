@@ -1,5 +1,6 @@
 ﻿namespace VRTK.Prefabs.CameraRig.CameraRigSwitcher
 {
+    using System.Collections;
     using UnityEngine;
     using UnityEngine.XR;
 
@@ -13,7 +14,7 @@
         /// </summary>
         public virtual void EnableXR()
         {
-            XRSettings.enabled = true;
+            StartCoroutine("SwitchToVR");
         }
 
         /// <summary>
@@ -23,5 +24,26 @@
         {
             XRSettings.enabled = false;
         }
+
+        IEnumerator SwitchToVR()
+        {
+            XRSettings.LoadDeviceByName("Oculus");
+
+            yield return null;
+            XRSettings.enabled = true;
+            // TrackingOriginMode.Floor
+            transform.root.GetChild(0).GetChild(0).gameObject.SetActive(false);
+            transform.root.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            Debug.Log("qweqw");
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                InputTracking.Recenter();
+            }
+        }
+
     }
 }
